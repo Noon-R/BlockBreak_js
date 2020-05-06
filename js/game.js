@@ -9,9 +9,11 @@ var dy = 1;
 
 var px = canvas.width/2;
 var py = canvas.height - 50;
+var pdir = 0;
 
 var wx = [100];
 var wy = [0];
+
 function drawBall(x,y,r){
     ctx.beginPath();{
         ctx.arc(x, y, r, 0, Math.PI * 2, false);
@@ -48,6 +50,7 @@ function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     bx += dx;
     by -= dy;
+    px += pdir;
 
     if( bx <= 0 || bx >= canvas.width){
         dx *= -1;
@@ -57,14 +60,33 @@ function draw(){
         dy *= -1;
     }
 
-    coollisionArcRect(bx,by,br,wx[0],wy[0],40,20);
+    for(var i = 0 ; i < wx.length; i++){
+        coollisionArcRect(bx,by,br,wx[i],wy[i],40,20);
+        drawWall(wx[i],wy[i]);
+    }
+    
     coollisionArcRect(bx,by,br,px,py,40,20);
-
     drawBall(bx,by,br);
-    drawWall(wx[0],wy[0]);
     drawWall(px,py);
     
     
 }
+
+
+document.addEventListener("keydown", (e) =>{
+    if( e.key == "ArrowRight"){
+        pdir = 3;
+    }else if( e.key == "ArrowLeft"){
+        pdir = -3;
+    }
+}, false);
+
+document.addEventListener("keyup", (e)=>{
+    if( e.key == "ArrowRight"){
+        pdir = 0;
+    }else if( e.key == "ArrowLeft"){
+        pdir = 0;
+    }
+}, false);
 
 setInterval(draw, 10);
