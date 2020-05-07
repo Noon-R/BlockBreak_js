@@ -11,8 +11,12 @@ var px = canvas.width/2;
 var py = canvas.height - 50;
 var pdir = 0;
 
-var wx = [100];
-var wy = [0];
+var wcount = 55;
+var wx = new Array(wcount);
+var wy = new Array(wcount);
+var ws = new Array(wcount);
+var ww = 40;
+var wh = 20;
 
 function drawBall(x,y,r){
     ctx.beginPath();{
@@ -22,9 +26,9 @@ function drawBall(x,y,r){
     }ctx.closePath();
 }
 
-function drawWall(x,y){
+function drawWall(x,y,w,h){
     ctx.beginPath();{
-        ctx.rect(x, y, 40, 20);
+        ctx.rect(x, y, w, h);
         ctx.fillStyle = "#44DDAA";
         ctx.fill();
     }ctx.closePath();
@@ -33,17 +37,29 @@ function drawWall(x,y){
 function coollisionArcRect(bx,by,br,wx,wy,ww,wh) {
 
     if( Math.abs(bx - (wx + ww/2)) <= br/2 + ww/2 && Math.abs(by - (wy + wh/2)) <= br/2 + wh/2 ){
-        if( Math.abs(bx - (wx + ww/2)) < br/2 + ww/2 ){
-            dx *= -1;
-        }else if( Math.abs(by - (wy + wh/2)) < br/2 + wh/2 ){
+        var px = bx - dx;
+        var py = by + dy;
+        if( Math.abs(px - (wx + ww/2)) < br/2 + ww/2 ){
             dy *= -1;
+        }else if( Math.abs(py - (wy + wh/2)) < br/2 + wh/2 ){
+            dx *= -1;
         }else{
             dx *= -1;
             dy *= -1;
         }
-
+        return true;
     }
+    return false;
 
+}
+
+function Init(){
+    for(var i = 0 ; i < wx.length; i++){
+        
+        wx[i] = (ww + 1) * (i%11) + 15;
+        wy[i] = (wh + 2) * parseInt(i/11) + 5 ;
+        ws[i] = true;
+    }
 }
 
 function draw(){
@@ -61,13 +77,17 @@ function draw(){
     }
 
     for(var i = 0 ; i < wx.length; i++){
-        coollisionArcRect(bx,by,br,wx[i],wy[i],40,20);
-        drawWall(wx[i],wy[i]);
+        if(ws[i]){
+            if(coollisionArcRect(bx,by,br,wx[i],wy[i],40,20)){
+                ws[i] = false
+            }
+            drawWall(wx[i],wy[i],ww,wh);
+        }
     }
     
     coollisionArcRect(bx,by,br,px,py,40,20);
     drawBall(bx,by,br);
-    drawWall(px,py);
+    drawWall(px,py,ww,wh);
     
     
 }
@@ -89,4 +109,6 @@ document.addEventListener("keyup", (e)=>{
     }
 }, false);
 
+
+Init();
 setInterval(draw, 10);
