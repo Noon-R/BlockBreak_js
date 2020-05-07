@@ -72,8 +72,14 @@ function draw(){
         dx *= -1;
     }
 
-    if(by <= 0 || by >= canvas.height){
+    if(by <= 0){
         dy *= -1;
+    }
+
+    if(by >= canvas.height){
+        ctx.font = "48px serif";
+        ctx.fillText("GameOver", canvas.width/2 - 70, 50);
+        return;
     }
 
     for(var i = 0 ; i < wx.length; i++){
