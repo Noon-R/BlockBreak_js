@@ -44,7 +44,7 @@ function coollisionArcRect(bx,by,br,wx,wy,ww,wh) {
         }else if( Math.abs(py - (wy + wh/2)) < br/2 + wh/2 ){
             dx *= -1;
         }else{
-            dx *= -1;
+            dx *= -1.5;
             dy *= -1;
         }
         return true;
